@@ -1,5 +1,8 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'dart:math';
 
 void main() {
   runApp(MyApp());
@@ -29,7 +32,64 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  
+
+  int userOverallScore = 0;
+  int userTurnScore = 0;
+  int computerOverallScore = 0;
+  int computerTurnScore =  0;
+  int diceSide = 1;
+  bool isButtonDisabled = false;
+  String movement = '';
+
+
+  Future updateDiceSide() async{
+    await new Future.delayed(const Duration(milliseconds: 100));
+    setState(() {
+      diceSide = 1 + Random().nextInt(6);
+    });
+  }
+
+
+  Future<void> roll()async{
+    for(int i = 0; i<= 10; i++){
+      await updateDiceSide();
+    }
+  }
+
+  void reset(){
+    setState(() {
+      userOverallScore = 0;
+      userTurnScore = 0;
+      computerOverallScore = 0;
+      computerTurnScore =  0;
+      diceSide = 1;
+      movement = 'Reset';
+    });
+
+  }
+
+  void hold(){
+    setState(() {
+      userOverallScore += userTurnScore;
+      userTurnScore = 0;
+      movement = 'User holds';
+    });
+  }
+
+  void userTurn() async{
+    await roll();
+    setState(() {
+      if(diceSide != 1){
+        userTurnScore += diceSide;
+      }else{
+        userTurnScore = 0;
+        movement = 'User rolls a 1';
+      }
+      movement = 'Your turn score: $userTurnScore';
+    });
+
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -44,14 +104,14 @@ class _MyHomePageState extends State<MyHomePage> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text("Your score: 0"),
-                Text("Computer score: 0")
+                Text("Your score: $userOverallScore"),
+                Text("Computer score: $computerOverallScore")
               ],
             ),
-            Text("Current move"),
+            Text(movement),
             Expanded(
               child: Image(
-                  image: AssetImage("images/dice1.png"),
+                  image: AssetImage("images/dice$diceSide.png"),
               ),
             ),
             Row(
@@ -59,22 +119,18 @@ class _MyHomePageState extends State<MyHomePage> {
               children: [
                 ActionButton(
                   text: "ROLL",
-                  onPressed: (){
-
-                  },
+                  onPressed: userTurn,
                 ),
 
                 ActionButton(
                   text: "HOLD",
-                  onPressed: (){
-
-                  },
+                  onPressed:isButtonDisabled? null: hold,
                 ),
 
                 ActionButton(
                   text: "RESET",
                   onPressed: (){
-
+                    reset();
                   },
                 )
 
