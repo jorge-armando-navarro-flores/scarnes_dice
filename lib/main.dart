@@ -73,7 +73,9 @@ class _MyHomePageState extends State<MyHomePage> {
       userOverallScore += userTurnScore;
       userTurnScore = 0;
       movement = 'User holds';
+      isButtonDisabled = true;
     });
+    computerTurn();
   }
 
   void userTurn() async{
@@ -81,17 +83,51 @@ class _MyHomePageState extends State<MyHomePage> {
     setState(() {
       if(diceSide != 1){
         userTurnScore += diceSide;
+        movement = 'Your turn score: $userTurnScore';
       }else{
         userTurnScore = 0;
-        movement = 'User rolls a 1';
+        movement = 'User rolls a 1, computer turn';
+        isButtonDisabled = true;
+        computerTurn();
       }
-      movement = 'Your turn score: $userTurnScore';
+
     });
 
   }
 
+  computerTurn() async{
+    bool computerRolls = true;
+    while(computerRolls){
+      await new Future.delayed(const Duration(milliseconds: 500));
+      await roll();
+      await new Future.microtask(() => setState(() {
+        computerTurnScore += diceSide;
+        movement = 'Computer round score: $computerTurnScore';
+      }));
+
+      setState(() {
+        if(diceSide == 1){
+          movement = 'Computer rolls 1, your turn';
+          computerTurnScore = 0;
+          computerRolls = false;
+          isButtonDisabled = false;
+        } else if (computerTurnScore > 19){
+          movement = 'Computer Holds, your turn';
+          computerOverallScore += computerTurnScore;
+          computerTurnScore = 0;
+          computerRolls = false;
+          isButtonDisabled = false;
+        }
+      });
+
+
+    }
+    return null;
+  }
+
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
@@ -119,7 +155,7 @@ class _MyHomePageState extends State<MyHomePage> {
               children: [
                 ActionButton(
                   text: "ROLL",
-                  onPressed: userTurn,
+                  onPressed: isButtonDisabled? null: userTurn,
                 ),
 
                 ActionButton(
