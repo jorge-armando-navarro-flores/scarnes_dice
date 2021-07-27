@@ -64,6 +64,7 @@ class _MyHomePageState extends State<MyHomePage> {
       computerTurnScore =  0;
       diceSide = 1;
       movement = 'Reset';
+      isButtonDisabled = false;
     });
 
   }
@@ -72,10 +73,18 @@ class _MyHomePageState extends State<MyHomePage> {
     setState(() {
       userOverallScore += userTurnScore;
       userTurnScore = 0;
-      movement = 'User holds';
+      if(userOverallScore < 100){
+        movement = 'User holds, computer turn';
+      }else{
+        movement = 'User wins! reset?';
+      }
+
       isButtonDisabled = true;
     });
-    computerTurn();
+    if(userOverallScore < 100){
+      computerTurn();
+    }
+
   }
 
   void userTurn() async{
@@ -112,8 +121,14 @@ class _MyHomePageState extends State<MyHomePage> {
           computerRolls = false;
           isButtonDisabled = false;
         } else if (computerTurnScore > 19){
-          movement = 'Computer Holds, your turn';
+
           computerOverallScore += computerTurnScore;
+          if(computerOverallScore < 100){
+            movement = 'Computer Holds, your turn';
+          }else{
+            movement = 'Computer wins! reset?';
+
+          }
           computerTurnScore = 0;
           computerRolls = false;
           isButtonDisabled = false;
