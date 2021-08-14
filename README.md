@@ -1,16 +1,14 @@
-# scarnes_dice
+# Scarne's Dice
 
-A new Flutter project.
+is a turn-based dice game where players score points by rolling a die and then:
 
-## Getting Started
+if they roll a 1, score no points and lose their turn
 
-This project is a starting point for a Flutter application.
+if they roll a 2 to 6:
+- add the rolled value to their points
+- choose to either reroll or keep their score and end their turn
 
-A few resources to get you started if this is your first Flutter project:
+The winner is the first player that reaches (or exceeds) 100 points.
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
+![dice](gifs/scarnes_dice.gif)
 
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
