@@ -12,3 +12,6 @@ The winner is the first player that reaches (or exceeds) 100 points.
 
 ![dice](gifs/scarnes_dice.gif)
 
+## Based on
+[Applied CS Skills with Google](https://appliedcsskills.withgoogle.com/modules/zz_acswa/_static/unit6lesson8.html)
+
